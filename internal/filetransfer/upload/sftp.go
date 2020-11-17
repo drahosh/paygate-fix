@@ -115,11 +115,25 @@ var (
 )
 
 func sftpConnect(logger log.Logger, sftpConf *config.SFTPConfig) (*ssh.Client, io.WriteCloser, io.Reader, error) {
+	sshConf := ssh.Config{}
+	sshConf.SetDefaults()
+	sshConf.KeyExchanges = append(
+		sshConf.KeyExchanges,
+		"diffie-hellman-group-exchange-sha256",
+	)
+
 	conf := &ssh.ClientConfig{
+		Config:  sshConf,
 		User:    sftpConf.Username,
 		Timeout: sftpDialTimeout,
 	}
+
 	conf.SetDefaults()
+	conf.KeyExchanges = append(
+		conf.KeyExchanges,
+		"diffie-hellman-group-exchange-sha256",
+		"diffie-hellman-group-exchange-sha1",
+	)
 
 	if sftpConf.HostPublicKey != "" {
 		pubKey, err := readPubKey(sftpConf.HostPublicKey)
