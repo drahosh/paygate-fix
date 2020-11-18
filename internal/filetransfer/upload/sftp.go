@@ -129,11 +129,6 @@ func sftpConnect(logger log.Logger, sftpConf *config.SFTPConfig) (*ssh.Client, i
 	}
 
 	conf.SetDefaults()
-	conf.KeyExchanges = append(
-		conf.KeyExchanges,
-		"diffie-hellman-group-exchange-sha256",
-		"diffie-hellman-group-exchange-sha1",
-	)
 
 	if sftpConf.HostPublicKey != "" {
 		pubKey, err := readPubKey(sftpConf.HostPublicKey)
